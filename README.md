@@ -1,5 +1,7 @@
 # Teams Activity Tool
 Captures Microsoft Teams application logs and parses to show activity
+
+# Usage
 ```
 usage: teams_activity.py [-h] [-e] [-a] [-d] logs
 
@@ -15,3 +17,15 @@ optional arguments:
   -a, --activity  Outputs activity log
   -d, --daily     Outputs daily hour totals
   ```
+# Screenshots
+Events output example:
+
+![Event output](/screenshots/Event.png)
+
+Activity output example:
+
+![Activity output](/screenshots/Activity.png)
+
+Daily output example:
+
+![Daily output](/screenshots/Daily.png)
