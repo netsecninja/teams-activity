@@ -9,10 +9,11 @@ import os
 import glob
 import datetime
 import re
+import appdirs
 
 # Globals
-version = '1.1'
-default_log_dir = 'C:\\Users\\<PROFILE>\\AppData\\Roaming\\Microsoft\\Teams'
+version = '1.2'
+default_log_dir = ''
 startup = 'StatusIndicatorStateService: initialized'
 shutdown_app = 'session-end fired'
 app_killed = '"exitCode":1073807364'
@@ -21,19 +22,34 @@ unlocked = 'Machine is unlocked'
 idle = 'Machine has been idle for'
 
 # Functions
+def get_default_dir():
+    if os.name == 'nt':
+        #if true == Windows 
+        log_dir = os.getenv('appdata')
+        default_log_dir = os.path.join(log_dir,'Microsoft','Teams')
+    elif os.name == 'posix':
+        log = os.path.join(appdirs.user_config_dir(),'Microsoft','Teams','logs.txt')
+        if os.path.exists(log):
+            #if true == Mac OS
+            default_log_dir = os.path.dirname(log)
+        else:
+            #else Linux 
+            default_log_dir = os.path.join(appdirs.user_config_dir(),'Microsoft','Microsoft Teams')
+    return default_log_dir
+
 def get_args():
     global version
     global default_log_dir
     
-    parser = argparse.ArgumentParser(description=f'Teams Activity Tool v{version}\nCaptures events in Teams logs to indicate activity. Outputs data in various formats.',\
-                                     formatter_class=argparse.RawTextHelpFormatter)
+    parser = argparse.ArgumentParser(description=f'Teams Activity Tool v{version}\nCaptures events in Teams logs to indicate activity. Outputs data in various formats.', formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument('-e', '--events', action='store_true', help='Outputs event log')
     parser.add_argument('-a', '--activity', action='store_true', help='Outputs activity log')
     parser.add_argument('-d', '--daily', action='store_true', help='Outputs daily hour totals')
     parser.add_argument('-t', '--timeout', default=30, type=int, help='Timeout setting in minutes for computer before auto-lock. Default is 30.')
-    parser.add_argument('logs', help=f'Path of logs to parse. Typical location is {default_log_dir} which includes logs.txt and old_logs_*.txt.')
+    parser.add_argument('-l', '--logs', default=get_default_dir(), required=False, action='store', help=f'Path of logs to parse. Typical location is {default_log_dir} which includes logs.txt and old_logs_*.txt.')
     
     args = parser.parse_args()
+    
 
     # Validate path exists
     if not os.path.isdir(args.logs):
