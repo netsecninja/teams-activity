@@ -12,7 +12,7 @@ import re
 import appdirs
 
 # Globals
-version = '1.1'
+version = '1.2'
 default_log_dir = ''
 startup = 'StatusIndicatorStateService: initialized'
 shutdown_app = 'session-end fired'
