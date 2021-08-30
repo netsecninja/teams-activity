@@ -85,7 +85,7 @@ def get_events(log_files, timeout):
     
     for file in log_files:
         # Read file contents
-        with open(file) as log:
+        with open(file, encoding="utf8") as log:
             entries = log.readlines()
 
         # Populate daily_activity dictionary
